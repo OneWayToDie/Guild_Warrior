@@ -1,4 +1,4 @@
-#include<iostream>
+ï»¿#include<iostream>
 #include<Windows.h>
 #include<time.h>
 using namespace std;
@@ -66,7 +66,7 @@ public:
 		health -= damage;
 		if (is_alive() == false)
 		{
-			cout << name << " ïàë â áîþ";
+			cout << name << " Ð¿Ð°Ð» Ð² Ð±Ð¾ÑŽ";
 		}
 	}
 	virtual bool is_alive()
@@ -75,7 +75,7 @@ public:
 	}
 	void info()const
 	{
-		cout << name << "(" << "Çäîðîâüå:" << health << ")" << endl;
+		cout << name << "(" << "Ð—Ð´Ð¾Ñ€Ð¾Ð²ÑŒÐµ:" << health << ")" << endl;
 	}
 };
 ///////////////////////////////////////////////////////////////
@@ -111,7 +111,7 @@ public:
 	{
 		if (target->is_alive() == false)
 		{
-			cout << name << "Âðàã ïîâðæåí, ýòî áåññìûñëåííî, ñóäàðü" << endl;
+			cout << name << "Ð’Ñ€Ð°Ð³ Ð¿Ð¾Ð²Ñ€Ð¶ÐµÐ½, ÑÑ‚Ð¾ Ð±ÐµÑÑÐ¼Ñ‹ÑÐ»ÐµÐ½Ð½Ð¾, ÑÑƒÐ´Ð°Ñ€ÑŒ" << endl;
 			return;
 		}
 		int damage = base_attack;
@@ -134,13 +134,13 @@ public:
 		}
 
 		if (is_alive() == false)
-			cout << "Ðûöàðü ìåðòâ, áîé îêîí÷åí" << endl;
+			cout << "Ð Ñ‹Ñ†Ð°Ñ€ÑŒ Ð¼ÐµÑ€Ñ‚Ð², Ð±Ð¾Ð¹ Ð¾ÐºÐ¾Ð½Ñ‡ÐµÐ½" << endl;
 	}
 	void use_ability(Warrior* target = nullptr) override
 	{
 		armor += 5;
 		ability_used = true;
-		cout << name << " óñèëèë ñâîþ áðîíþ, òåïåðü å¸ çíà÷åíèå = " << armor << endl;
+		cout << name << " ÑƒÑÐ¸Ð»Ð¸Ð» ÑÐ²Ð¾ÑŽ Ð±Ñ€Ð¾Ð½ÑŽ, Ñ‚ÐµÐ¿ÐµÑ€ÑŒ ÐµÑ‘ Ð·Ð½Ð°Ñ‡ÐµÐ½Ð¸Ðµ = " << armor << endl;
 	}
 };
 
@@ -149,7 +149,7 @@ public:
 ///////////////////////////////////////////////////////////////
 class Archer :public Warrior
 {
-	int quiver;	//êîë÷àí ñî ñòðåëàìè
+	int quiver;	//ÐºÐ¾Ð»Ñ‡Ð°Ð½ ÑÐ¾ ÑÑ‚Ñ€ÐµÐ»Ð°Ð¼Ð¸
 public:
 	///////////////////////////////////////////////////////////////
 	//							get/set methods					 //
@@ -177,19 +177,19 @@ public:
 		int damage;
 		if (target->is_alive() == false)
 		{
-			cout << name << "Âðàã ïîâåðæåí, ýòî áåññìûñëåííî, ñóäàðü" << endl;
+			cout << name << "Ð’Ñ€Ð°Ð³ Ð¿Ð¾Ð²ÐµÑ€Ð¶ÐµÐ½, ÑÑ‚Ð¾ Ð±ÐµÑÑÐ¼Ñ‹ÑÐ»ÐµÐ½Ð½Ð¾, ÑÑƒÐ´Ð°Ñ€ÑŒ" << endl;
 			return;
 		}
 		if (quiver > 0)
 		{
 			damage = base_attack;
 			quiver -= 1;
-			cout << name << " ïðîèçâ¸ë âûñòðåë, ñòðåë îñòàëîñü: " << quiver << endl;
+			cout << name << " Ð¿Ñ€Ð¾Ð¸Ð·Ð²Ñ‘Ð» Ð²Ñ‹ÑÑ‚Ñ€ÐµÐ», ÑÑ‚Ñ€ÐµÐ» Ð¾ÑÑ‚Ð°Ð»Ð¾ÑÑŒ: " << quiver << endl;
 		}
 		else
 		{
 			damage = 1;
-			cout << name << " áü¸ò ëóêîì ïî áàøêå" << endl;
+			cout << name << " Ð±ÑŒÑ‘Ñ‚ Ð»ÑƒÐºÐ¾Ð¼ Ð¿Ð¾ Ð±Ð°ÑˆÐºÐµ" << endl;
 		}
 		target->take_damage(damage);
 	}
@@ -197,17 +197,17 @@ public:
 	{
 		if (quiver < 3)
 		{
-			cout << "Ñïîñîáíîñòü íåäîñòóïíà" << endl;
+			cout << "Ð¡Ð¿Ð¾ÑÐ¾Ð±Ð½Ð¾ÑÑ‚ÑŒ Ð½ÐµÐ´Ð¾ÑÑ‚ÑƒÐ¿Ð½Ð°" << endl;
 			return;
 		}
 		if (target->is_alive() == false) 
 		{
-			cout << "Íåëüçÿ àòàêîâàòü ì¸ðòâîãî âðàãà!" << endl;
+			cout << "ÐÐµÐ»ÑŒÐ·Ñ Ð°Ñ‚Ð°ÐºÐ¾Ð²Ð°Ñ‚ÑŒ Ð¼Ñ‘Ñ€Ñ‚Ð²Ð¾Ð³Ð¾ Ð²Ñ€Ð°Ð³Ð°!" << endl;
 			return;
 		}
 		quiver -= 3;
 		int damage = base_attack * 2;
-		cout << name << "Èñïîëüçóåò ñïîñîáíîñòü \"Ìåòêèé ãëàç\" è íàíîñèò äâîéíîé óðîí - " << damage << " åäèíèö óðîíà" << endl;
+		cout << name << "Ð˜ÑÐ¿Ð¾Ð»ÑŒÐ·ÑƒÐµÑ‚ ÑÐ¿Ð¾ÑÐ¾Ð±Ð½Ð¾ÑÑ‚ÑŒ \"ÐœÐµÑ‚ÐºÐ¸Ð¹ Ð³Ð»Ð°Ð·\" Ð¸ Ð½Ð°Ð½Ð¾ÑÐ¸Ñ‚ Ð´Ð²Ð¾Ð¹Ð½Ð¾Ð¹ ÑƒÑ€Ð¾Ð½ - " << damage << " ÐµÐ´Ð¸Ð½Ð¸Ñ† ÑƒÑ€Ð¾Ð½Ð°" << endl;
 		target->take_damage(damage);
 	}
 };

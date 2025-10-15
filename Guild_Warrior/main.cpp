@@ -78,10 +78,7 @@ public:
 	{
 		return health > 0;
 	}
-	virtual void info()const
-	{
-		cout << name << "(" << "Здоровье: " << health << ", " << "атака: " << base_attack << ")" << endl;
-	}
+	virtual void info()const = 0;
 };
 ///////////////////////////////////////////////////////////////
 //							class Knight					 //
@@ -314,7 +311,7 @@ int RandHealth(const std::string& type)	//создаю функцию, кото�
 }
 int RandBaseAttack(const std::string& type)
 {
-	if (type == "Knight") return rand() % 10 + 15;
+	if (type == "Knight") return rand() % 10 + 12;
 	if (type == "Archer") return rand() % 20 + 20;
 	if (type == "Wizard") return rand() % 15 + 15;
 }

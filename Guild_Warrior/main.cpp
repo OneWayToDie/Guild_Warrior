@@ -276,7 +276,7 @@ public:
 			return;
 		}
 		if (mana >= 10)	//Если маны 10 и больше, то есть шанс на использование способности(вероятность реализую в функции дуэлей), 
-			//после использования - забираю 10 маны у мага и исцеляю его на 10 очков здоровья('rdbdfktyn 1 мана = 1 хп)
+			//после использования - забираю 10 маны у мага и исцеляю его на 10 очков здоровья(эквивалент 1 мана = 1 хп)
 		{
 			damage = base_attack * 2;
 			health += 10;
@@ -296,7 +296,8 @@ public:
 	}
 };
 
-Warrior* WarriorFactory(const std::string& type, const std::string& name = "")	//Использую фабричный паттерн для генерации воинов
+Warrior* WarriorFactory(const std::string& type, const std::string& name = "")	//Использую фабричный паттерн для генерации воинов, смотерл по нашему репозиторию с академией, 
+//но нули заменил функциями, котоыре генерят рандомные числа
 {
 	if (type == "Knight") return new Knight(name, RandHealth(type), RandBaseAttack(type), RandAbility(type));
 	if (type == "Archer") return new Archer(name, RandHealth(type), RandBaseAttack(type), RandAbility(type));
@@ -404,6 +405,10 @@ void main()
 #ifdef DUEL
 	Warrior* Human = WarriorFactory("Knight", "Asphodel");	//Инициализирую двух бойцов для дуэли между ними, и вызываю функцию для её генерации
 	Warrior* Goblin = WarriorFactory("Archer", "Ak1zaura");
+	cout << "Фракция - человек, ник:\t";
+	Human->info();
+	cout << "Фракция - гоблин, ник:\t";
+	Goblin->info();
 	Duel(Human, Goblin);
 
 	delete Human;

@@ -1,35 +1,6 @@
 ﻿#include"stdafx.h"
+#include"Factory.h"
 
-
-
-Warrior* WarriorFactory(const std::string& type, const std::string& name = "")	//Использую фабричный паттерн для генерации воинов, смотрел по нашему репозиторию с академией, 
-//но нули заменил функциями, котоыре генерят рандомные числа
-{
-	if (type == "Knight") return new Knight(name, 130, RandBaseAttack(type), 1, 0, 150, RandAbility(type));
-	if (type == "Archer") return new Archer(name, 95, RandBaseAttack(type), 1, 0, 150, RandAbility(type));
-	if (type == "Wizard") return new Wizard(name, 80, RandBaseAttack(type), 1, 0, 150, RandAbility(type));
-	cout << "\nНеизвестный тип воина '" << type << "', игровой ник: '" << name << "'" << endl;	//Описание неизвестного типа воина
-	cout << delimiter << endl;
-	return nullptr;	//Если тип неизвестен
-}
-int RandHealth(const std::string& type)	//создаю функцию, которая будет рандомить хпшку нашим классам, а также базовую атаку и их абилки
-{
-	if (type == "Knight") return rand() % 50 + 100;
-	if (type == "Archer") return rand() % 30 + 80;
-	if (type == "Wizard") return rand() % 25 + 65;
-}
-int RandBaseAttack(const std::string& type)
-{
-	if (type == "Knight") return rand() % 10 + 12;
-	if (type == "Archer") return rand() % 20 + 20;
-	if (type == "Wizard") return rand() % 15 + 15;
-}
-int RandAbility(const std::string& type)
-{
-	if (type == "Knight") return rand() % 5 + 7;
-	if (type == "Archer") return rand() % 8 + 7;
-	if (type == "Wizard") return rand() % 15 + 20;
-}
 
 void Duel(Warrior* Human, Warrior* Goblin)	//Функция с генерацией дуэлей
 {
@@ -66,17 +37,45 @@ void Duel(Warrior* Human, Warrior* Goblin)	//Функция с генераци�
 	}
 	if (Human->is_alive())	//Делаю проверку на жизнь в конце каждого цикла, и если один из них мёртв - вывожу победителя
 	{
-		Human->gain_exp(2250);
+		Human->gain_exp(100);
 		cout << "\nПобедил воин фракции Human, под ником " << Human->get_name() << "!" << endl;
 		Human->info();
 	}
 	else
 	{
-		Goblin->gain_exp(1150);
+		Goblin->gain_exp(100);
 		cout << "\nПобедил воин фракции Goblin под ником " << Goblin->get_name() << "!" << endl;
 		Goblin->info();
 	}
+	if (Human->is_alive() == false)	//Делаю проверку на жизнь в конце каждого цикла, и если один из них мёртв - вывожу победителя
+	{
+		Human->gain_exp(50);
+		cout << "\nВоин фракции Human, под ником " << Human->get_name() << " прогирал!" << endl;
+		Human->health_recovery();
+		Human->info();
+	}
+	else
+	{
+		Goblin->gain_exp(50);
+		cout << "\nВоин фракции Goblin под ником " << Goblin->get_name() << " Проиграл!" << endl;
+		Goblin->health_recovery();
+		Goblin->info();
+	}
 }
+
+void Duel_realization()
+{
+	Warrior* Human = WarriorFactory("Knight", "Asphodel");	//Инициализирую двух бойцов для дуэли между ними, и вызываю функцию для её генерации
+	Warrior* Goblin = WarriorFactory("Archer", "Ak1zaura");
+	cout << "Фракция - человек, ник:\t";
+	Human->info();
+	cout << "Фракция - гоблин, ник:\t";
+	Goblin->info();
+	Duel(Human, Goblin);
+	delete Human;
+	delete Goblin;
+}
+	
 
 //#define info
 #define DUEL
@@ -114,15 +113,7 @@ void main()
 
 
 #ifdef DUEL
-	Warrior* Human = WarriorFactory("Knight", "Asphodel");	//Инициализирую двух бойцов для дуэли между ними, и вызываю функцию для её генерации
-	Warrior* Goblin = WarriorFactory("Archer", "Ak1zaura");
-	cout << "Фракция - человек, ник:\t";
-	Human->info();
-	cout << "Фракция - гоблин, ник:\t";
-	Goblin->info();
-	Duel(Human, Goblin);
-	delete Human;
-	delete Goblin;
+	Duel_realization();
 #endif // DUEL
 
 }

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include<iostream>
 using namespace std;
 
@@ -16,9 +16,9 @@ protected:
 	std::string name;
 	int health;
 	int base_attack;
-	int level = 1;			//�������
-	int exp;				//����
-	int exp_for_level_up;	//���� ��� ��������� ������
+	int level = 1;			//Уровень
+	int exp;				//опыт
+	int exp_for_level_up;	//Опыт для повышения уровня
 	int max_health;
 public:
 	///////////////////////////////////////////////////////////////
@@ -96,9 +96,9 @@ public:
 	///////////////////////////////////////////////////////////////
 	//							Methods							 //
 	///////////////////////////////////////////////////////////////
-	void gain_exp(int amount)
+	void gain_exp(int amount)	//Метод для повышения уровней, 
 	{
-		exp += amount;
+		exp += amount;	//Добавляем полученный опыт к текущему
 		while (exp >= exp_for_level_up && level < 60)
 		{
 			level_up();
@@ -106,14 +106,9 @@ public:
 	}
 	void level_up()
 	{
-
-		int old_level = level;
-		int old_health = health;
-		int old_max_health = max_health;
-		int old_attack = base_attack;
 		level++;
-		exp -= exp_for_level_up;
-		if (level < 5)
+		exp -= exp_for_level_up;	//Вычитаем из нашего имеющегося опыта - опыт необходимый для повышения одного уровня на данном этапе развития
+		if (level < 5)	//Условиями задаю повышения характеристик с каждым уровнем, а также количество опыта для лвл апа
 		{
 			exp_for_level_up = 50;
 			max_health += 8;
@@ -169,30 +164,34 @@ public:
 		}
 		else
 		{
-			level = 60;
+			level = 60;	//Максимальный уровень достигнут, дальше прекращаем повышение уровня
 			exp_for_level_up = 0;
-			cout << name << " ������� �� ������������� ������" << endl;
+			cout << name << " повышен до максимального уровня" << endl;
 			return;
 		}
-		health = max_health;
-		cout << name << " ������� ���� ������� �� " << level << endl;
+		health_recovery();	//После апа уровня - восстанавливаем здоровье потерянное в дуэли
+		cout << name << " повысил свой уровень до " << level << endl;
 	}
-	virtual void attack(Warrior* target) = 0;	// ����� ����������� �������, ������� � � ���� ���� ������������� � ������ �������
+	void health_recovery()
+	{
+		health = max_health;
+	}
+	virtual void attack(Warrior* target) = 0;	// Чисто виртуальные функции, которые я с нуля буду реализовывать в других классах
 	virtual void use_ability(Warrior* target = nullptr) = 0;
-	virtual void take_damage(int damage)	//����� ��������� ����� �� ��������� ��� ����, ����� �����, ��� ��� � ���� ���� �����, �� ������� � ������� ���������� ����
+	virtual void take_damage(int damage)	//Метод получения урона по умолчанию для всех, кроме война, так как у него есть броня, от которой и исходит получаемый урон
 	{
 		health -= damage;
 		if (is_alive() == false)
 		{
-			cout << name << " ��� � ���" << endl;
+			cout << name << " пал в бою" << endl;
 		}
 	}
-	virtual bool is_alive()	//����� �������� �� ���������������� ������
+	virtual bool is_alive()	//Метод проверки на жизнеспособность бойцов
 	{
 		return health > 0;
 	}
 	virtual void info()const
 	{
-		cout << name << "(��." << level << " ��������: " << health << "/" << max_health << ", �����: " << base_attack << ", ����: " << exp << "/" << exp_for_level_up << ")";
+		cout << name << "(Ур." << level << " Здоровье: " << health << "/" << max_health << ", Атака: " << base_attack << ", Опыт: " << exp << "/" << exp_for_level_up << ")";
 	}
 };

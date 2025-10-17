@@ -131,6 +131,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archer.h" />
+    <ClInclude Include="Battle.h" />
+    <ClInclude Include="Factory.h" />
     <ClInclude Include="Knight.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="Warrior.h" />

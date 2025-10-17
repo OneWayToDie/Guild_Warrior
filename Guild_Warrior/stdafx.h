@@ -1,15 +1,19 @@
-#pragma once
+﻿#pragma once
 #include<iostream>
+#include<algorithm>
+#include<vector>
+#include<map>
+#include<list>
 #include"Warrior.h"
 #include"Knight.h"
 #include"Archer.h"
 #include"Wizard.h"
-#include<algorithm>
-#include<vector>
+#include"Battle.h"
 using namespace std;
 
 #define tab "\t"
 #define delimiter "\n-----------------------------------------------------\n"
+
 
 ///////////////////////////////////////////////////////////////
 //							Initializations					 //

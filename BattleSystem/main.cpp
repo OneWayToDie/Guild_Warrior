@@ -240,7 +240,7 @@ public:
 	{
 		return health > 0;
 	}
-	virtual void use_ability_1() const = 0;
+	virtual void use_ability_1() = 0;
 	virtual void use_ability_2() const = 0;
 	virtual void use_ability_passive() const = 0;
 	virtual void use_ability_ultimate()  = 0;
@@ -317,7 +317,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	////////////						ABSTRACT_METHODS				  			  ////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
-	virtual void use_ability_1() const = 0;
+	virtual void use_ability_1() = 0;
 	virtual void use_ability_2() const = 0;
 	virtual void use_ability_passive() const = 0;
 	virtual void use_ability_ultimate() = 0;
@@ -440,15 +440,22 @@ public:
 			100,	//holy_power
 			200,	//mana
 			200,	//max_mana
-			0.15,	//heal(вампиризм)
+			0.2,	//heal(вампиризм)
 			5		//splash_damage_aura
 		);
 	}
-	void use_ability_1() const override
+	void use_ability_1() override	//Выхил перса на 20%
 	{
-		double heal_amount = get_max_health() * heal;
-		double health;
-		health = get_health() + heal_amount;
+		int heal_amount = get_max_health() * heal;	//Создали переменную, в которой мы хилимся на 20% от максимального здоровья
+		int new_health = get_health() + heal_amount;	//Создали переменную, в которую толкнули наше имеющееся здоровье и добавили к нему выхил
+
+		if (new_health > get_max_health())
+		{
+			new_health = get_max_health();	//после лечения, проверили здоровье, и если оно стало больше максимального - приравняли к максимальному
+		}
+
+		set_health(new_health);	//Изменили наше здоровье
+
 		cout << "Вы - " << name << " восстановили " << heal_amount << " HP" << endl;
 	}
 	void use_ability_2() const override	//в 5 крат повышена скорость атаки, на протяжении 7 секунд, урон увеличен на 60%, шанс крита на 25%
@@ -462,7 +469,9 @@ public:
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	////////////				ULTIMATE_ABILITY AND ALL FOR THIS		 			  ////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////
-	void use_ability_ultimate() override	//Суть ультимативки - увеличить атаку на 50% и сделать её магической с вампиризмом, по 3% от максимального хп за удар, максимальное здоровье на 40%, так ещё и при этом отхилиться до нового максимума, таймер 20 секунд, резисты на 30%
+	void use_ability_ultimate() override	//Суть ультимативки - увеличить атаку на 50% и сделать её магической с вампиризмом, по 3% от максимального хп за удар, 
+	//максимальное здоровье на 40%, так ещё и при этом отхилиться до нового максимума, таймер у всего этого дела - 20 секунд, 
+	//резисты увеличиваем на 30%, а также создаём такие условия, чтобы все противники атаковали только нас
 	{
 		if (is_divine_form_active == true)
 		{
@@ -482,19 +491,28 @@ public:
 		original_magic_resist = get_magic_resist();
 
 		is_divine_form_active = true;	//Способность активна
-		divine_form_timer = 20.0;		//Активируется на 20 секунд
+		divine_form_timer = 20.0;		//Активируется таймер на 20 секунд
 		holy_power = 0;					//Зануляем святую силу(так как это ультимативка, то и забирать она будет всю энергию под ноль)
 		
 		set_physic_attack(get_physic_attack() * 1.5);	//баффнули атаку на 50%
 
-		int new_max_health = get_max_health() * 1.4;	//отхилился и увеличил хп на 40%
+		int new_max_health = get_max_health() * 1.4;	//увеличил макс. хп на 40%
 		set_max_health(new_max_health);	//Сравнял реальное максимальное здоровье с новым
 		set_health(new_max_health);		//полное здоровье
 
 		set_physic_resist(get_physic_resist() * 30/100); //Увеличил физическую защиту на 30%
 		set_magic_resist(get_magic_resist() * 30/100);	 //Увеличил магическую защиту на 30%
+	
+		if (divine_form_timer <= 0)	//Если таймер способности меньше или равен нулю - выходим из божественной формы
+		{
+			end_divine_form();
+		}
+		else if (divine_form_timer <= 5.0)	//Сообщаем игроку о том, что у него осталось 5 секунд до конца божественной формы
+		{
+			cout << "Божественная форма подходит к концу, осталось " << divine_form_timer << " секунд.\n";
+		}
 	}
-	void vampirism()
+	void magic_damage_for_Paladin_ability_ultimate()
 	{
 		if (is_divine_form_active == false)
 		{
@@ -506,8 +524,36 @@ public:
 		//Если всё же каким-то чудом, мы - нищеброды, смогли накопить три очка святой силы, атаки переходят на новый уровень
 		int base_magic_damage = get_physic_attack();	//Создаём базовую магическую атаку, и за основу её харрактеристик берём базовую атаку(чтобы было от чего отталкиваться)
 		int magic_damage = calculate_magical_crit(base_magic_damage);	//Ну врооооде... физический урон должен был стать магическим, но так ли это... мы пока не узнаем... и наверное никогда
-
+		//Я не уверен, что эта логика будет работать, уже запутался...
 		
+		int heal_amount = get_max_health() * 0.03;	//Сделал переменную, в которую передаю 3% от здоровья
+		set_health(min(get_health() + heal_amount, get_max_health()));	//Передал 3% от здоровья персонажа персонажу, не превышая предела максимального здоровья(коряво звучит, но по факту)
+
+		max_threat();	//Множитель угрозы, чтоб мобы агрились только на танка(в данном классе - на паладина)
+	}
+	void max_threat()
+	{
+		if (is_divine_form_active == true)
+		{
+			//Не реализовано, здесь мобы будут агриться только на паладина или другие подклассы танка, ибо у них у всех будет одинаковый множитель "угрозы"
+		}
+	}
+	void end_divine_form()
+	{
+		if (is_divine_form_active) return;	//Проверяем - включена ли божественая форма
+
+		//Возвращаем оригинальные статы перса
+		set_physic_attack(original_physic_attack);
+		set_max_health(original_max_health);
+		set_physic_resist(original_physic_resist);
+		set_magic_resist(original_magic_resist);
+
+		if (get_health() > get_max_health())	
+		{
+			set_health(get_max_health());	//После всех махинаций сделали здоровье равным максимальному
+		}
+
+		is_divine_form_active = false; //Отключаем божественную форму
 	}
 	//////////////////////////////////////////////////////////////////////////////////////////////
 	////////////					ТАКЕ ДАМАГЕ... ЁЛКИ-ИГОЛКИ...		 			  ////////////
@@ -528,7 +574,6 @@ public:
 	{
 		cout << "Paladin " << get_name() << " - Level " << get_lvl() << "\n";
 		cout << "Health: " << get_health() << "/" << get_max_health() << "\n";
-		cout << "Mana: " << mana << "/" << max_mana << "\n";
 		cout << "Holy Power: " << holy_power << "\n";
 		cout << "Physical Attack: " << get_physic_attack() << "\n";
 		cout << "Magic Attack: " << magic_attack << "\n";
